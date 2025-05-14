@@ -9,6 +9,7 @@ import (
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -30,7 +31,7 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /transaction", h.HandleCreateTransaction)
 	router.HandleFunc("GET /transaction", h.HandleGetTransactions)
 	router.HandleFunc("DELETE /transaction/{transactionID}", h.HandleDeleteTransactionByID)
-	router.HandleFunc("PATCH /transaction/{transactionID}", h.HandleUpdateTransactionByID)
+	router.HandleFunc("PUT /transaction/{transactionID}", h.HandleUpdateTransactionByID)
 }
 
 
@@ -41,7 +42,59 @@ func (h *Handler) HandleUpdateTransactionByID(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-		utils.WriteJSON(w, http.StatusOK, true)
+		objectId, err := primitive.ObjectIDFromHex(transactionID)
+		if err != nil {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid transactionid %v", err))
+			return
+		}
+
+		var payload types.UpdateTransactionPayload
+		if err := utils.ParseJSON(r, &payload); err != nil {
+			utils.WriteError(w, http.StatusBadRequest, err)
+			return
+		}
+
+		if err := utils.Validate.Struct(payload); err != nil {
+			errors := err.(validator.ValidationErrors)
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
+			return
+		}
+
+		// Check if transaction exists
+		query := bson.D{{Key: "_id", Value: objectId}}
+		transaction, err := h.store.GetTransactionsByQuery(query)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error fetching transaction %v", err))
+			return
+		}
+
+		if len(transaction) == 0 {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("transaction does not exist %v", err))
+			return
+		}
+
+		existingTransaction := transaction[0]
+
+		existingTransaction.Category = payload.Category
+		existingTransaction.TransactionType = payload.TransactionType
+		existingTransaction.Name = payload.Name
+		existingTransaction.Notes = payload.Notes
+		existingTransaction.Amount = payload.Amount
+
+		date, err := time.Parse("2006-01-02", payload.Date)
+		if err == nil {
+			existingTransaction.Date = date
+		}
+
+		err = h.store.UpdateTransactionByID(existingTransaction)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error updating transaction %v", err))
+			return
+		}
+
+
+
+		utils.WriteJSON(w, http.StatusOK, existingTransaction)
 		
 }
 

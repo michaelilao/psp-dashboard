@@ -21,6 +21,21 @@ func NewStore(client *mongo.Client) *Store {
 	return &Store{client: client}
 }
 
+func (s *Store) UpdateTransactionByID(transaction types.Transaction) (error) {
+	coll := s.client.Database(dbName).Collection(collName)
+	filter := bson.D{{Key: "_id", Value: transaction.ID}}
+	
+	result, err := coll.ReplaceOne(context.TODO(), filter, transaction)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("transactionid does not exist")
+	}
+
+	return nil
+}
 
 func (s *Store) CreateTransaction(transaction types.Transaction) (primitive.ObjectID, error){
 
@@ -51,10 +66,10 @@ func (s *Store) GetTransactionsByQuery(filter bson.D) ([]types.Transaction, erro
 	return transactions, nil
 }
 
-func (s* Store) DeleteTransactionByID(trainsactionID primitive.ObjectID) (error) {
+func (s* Store) DeleteTransactionByID(transactionID primitive.ObjectID) (error) {
 	coll := s.client.Database(dbName).Collection(collName)
 	
-	filter := bson.D{{Key: "_id", Value: trainsactionID}}
+	filter := bson.D{{Key: "_id", Value: transactionID}}
 	result, err := coll.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return err

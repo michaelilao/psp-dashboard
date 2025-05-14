@@ -10,7 +10,8 @@ import (
 type TransactionStore interface {
 	CreateTransaction(transaction Transaction) (primitive.ObjectID, error)
 	GetTransactionsByQuery(filter bson.D) ([]Transaction, error)
-	DeleteTransactionByID(trainsactionID primitive.ObjectID) (error)
+	DeleteTransactionByID(transactionID primitive.ObjectID) (error)
+	UpdateTransactionByID(transaction Transaction) (error)
 }
 
 type Transaction struct {
@@ -30,6 +31,16 @@ type CreateTransactionPayload struct {
 	Category					string	`json:"category" validate:"required"`
 	TransactionType		string 	`json:"TransactionType" validate:"required,oneof=income expense"`
 	Amount						int  		`json:"amount" validate:"required"`
-	Name  						string 	`json:"name" validate:"required"`
-	Notes 						string `json:"notes"`
+	Name  						string 	`json:"name"`
+	Notes 						string 	`json:"notes"`
+}
+
+
+type UpdateTransactionPayload struct {
+	Date							string 	`json:"date"`
+	Category					string	`json:"category"`
+	TransactionType		string 	`json:"TransactionType" validate:"required,oneof=income expense"`
+	Amount						int  		`json:"amount" validate:"required"`
+	Name  						string 	`json:"name"`
+	Notes 						string 	`json:"notes"`
 }
