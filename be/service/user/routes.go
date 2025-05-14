@@ -27,8 +27,47 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /user", h.HandleGetUsers)
 	router.HandleFunc("POST /user", h.HandleCreateUser)
 	router.HandleFunc("DELETE /user/{userId}", h.HandleDeleteUserById)
+	router.HandleFunc("PUT /user/{userId}", h.HandleUpdateUserById)
+	
 }
+func (h *Handler) HandleUpdateUserById(w http.ResponseWriter, r *http.Request) {
+	userId := r.PathValue("userId")
+	if userId == "" {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty userId"))
+		return
+	}
 
+	
+	var payload types.UpdateUserPayload
+	if err := utils.ParseJSON(r, &payload); err != nil {
+		utils.WriteError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	if err := utils.Validate.Struct(payload); err != nil {
+		errors := err.(validator.ValidationErrors)
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
+		return
+	}
+
+	existingUser, err := h.store.GetUserById(userId)
+	if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error fetching user %v", err))
+			return
+	}
+
+	existingUser.Email = payload.Email
+	existingUser.Name = payload.Name
+	existingUser.Notes = payload.Notes
+
+	err = h.store.UpdateUserById(*existingUser)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error updating user %v", err))
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, existingUser)
+}
 
 func (h *Handler) HandleDeleteUserById(w http.ResponseWriter, r *http.Request) {
  	userId := r.PathValue("userId")

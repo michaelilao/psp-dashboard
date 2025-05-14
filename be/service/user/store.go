@@ -40,6 +40,18 @@ func (s *Store) DeleteUserById(userId primitive.ObjectID) (error) {
 
 func (s *Store) UpdateUserById(user types.User) (error) {
 
+	coll := s.client.Database(dbName).Collection(collName)
+	filter := bson.D{{Key: "_id", Value: user.Id}}
+	
+	result, err := coll.ReplaceOne(context.TODO(), filter, user)
+	if err != nil {
+		return err
+	}
+
+	if result.MatchedCount == 0 {
+		return fmt.Errorf("userid does not exist")
+	}
+
 	return nil
 }
 
