@@ -4,8 +4,10 @@ import "go.mongodb.org/mongo-driver/bson/primitive"
 
 type UserStore interface {
 	GetUserByEmail(email string) (*User, error)
+	GetUserByID(id string) (*User, error)
 	InsertUser(user User) (primitive.ObjectID, error)
 	GetUsers() ([]User, error)
+
 }
 
 type User struct {
@@ -15,7 +17,7 @@ type User struct {
 	Notes string						 `bson:"notes"`
 }
 
-type RegisterUserPayload struct {
+type CreateUserPayload struct {
 	Name  string `json:"name" validate:"required"`
 	Email string `json:"email" validate:"required,email"`
 	Notes string `json:"notes"`

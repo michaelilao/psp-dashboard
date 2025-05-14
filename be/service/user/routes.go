@@ -39,7 +39,7 @@ func (h *Handler) HandleGetUsers(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
-	var payload types.RegisterUserPayload
+	var payload types.CreateUserPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {
 		utils.WriteError(w, http.StatusBadRequest, err)
 		return

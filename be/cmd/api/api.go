@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"psp-dashboard-be/service/transaction"
 	"psp-dashboard-be/service/user"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -25,8 +26,14 @@ func (s *APIServer) Run() error {
 	router := http.NewServeMux()
 
 	userStore := user.NewStore(s.db)
+	transactionStore := transaction.NewStore(s.db)
+
+
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(router)
+
+	transactionHandler := transaction.NewHandler(transactionStore, userStore)
+	transactionHandler.RegisterRoutes(router)
 
 	
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

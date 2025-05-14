@@ -27,12 +27,31 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	user := &types.User{}
 	err := coll.FindOne(context.TODO(), bson.D{{Key: "email", Value: email}}).Decode(&user)
 
-	if err == mongo.ErrNoDocuments {
+	if err != nil {
 		return nil, err
 	}
 	
 	return user, nil
 }
+
+func (s *Store) GetUserByID(id string) (*types.User, error) {
+	coll := s.client.Database(dbName).Collection(collName)
+	user := &types.User{}
+
+	objectId, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	err = coll.FindOne(context.TODO(), bson.D{{Key: "_id", Value: objectId}}).Decode(&user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+
 
 func (s *Store) InsertUser(user types.User) (primitive.ObjectID, error) {
 
