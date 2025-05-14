@@ -9,15 +9,17 @@ type UserStore interface {
 	DeleteUserById(primitive.ObjectID) (error)
 	UpdateUserById(user User) (error)
  	GetUsers() ([]User, error)
+	GetUsersWithTransactions() ([]User, error)
 
 }
 
 type User struct {
-	Id    primitive.ObjectID `bson:"_id,omitempty"`
-	Name  string             `bson:"name"`
-	Email string             `bson:"email"`
-	Notes string						 `bson:"notes"`
-}
+	Id    				primitive.ObjectID `bson:"_id,omitempty" json:"id"`
+	Name  				string             `bson:"name" json:"name"`
+	Email 				string             `bson:"email" json:"email"`
+	Notes 				string						 `bson:"notes" json:"notes"`
+	Transactions	[]Transaction			 `bson:"transactions" json:"transaction"`
+}	
 
 type CreateUserPayload struct {
 	Name  string `json:"name" validate:"required"`

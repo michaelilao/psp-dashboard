@@ -93,8 +93,7 @@ func (h *Handler) HandleDeleteUserById(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *Handler) HandleGetUsers(w http.ResponseWriter, r *http.Request) {
-
-	users, err := h.store.GetUsers()
+	users, err := h.store.GetUsersWithTransactions()
 	if err != nil {
 		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error getting users %v", err))
 		return

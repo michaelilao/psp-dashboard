@@ -15,14 +15,14 @@ type TransactionStore interface {
 }
 
 type Transaction struct {
-	Id    					primitive.ObjectID 	`bson:"_id,omitempty"`
-	UserId  				primitive.ObjectID  `bson:"userId"`
-	Date 						time.Time           `bson:"date"`
-	Category				string							`bson:"category"`
-	TransactionType	string							`bson:"transactionType"` 
-	Amount					int									`bson:"amount"`
-	Name						string							`bson:"name"`
-	Notes 					string						 	`bson:"notes"`
+	Id    					primitive.ObjectID 	`bson:"_id,omitempty" json:"id"`
+	UserId  				primitive.ObjectID  `bson:"userId" json:"userId"`
+	Date 						time.Time           `bson:"date" json:"date"`
+	Category				string							`bson:"category" json:"category"`
+	TransactionType	string							`bson:"transactionType" json:"transactionType"` 
+	Amount					int									`bson:"amount" json:"amount"`
+	Name						string							`bson:"name" json:"name"`
+	Notes 					string						 	`bson:"notes" json:"notes"`
 }
 
 type CreateTransactionPayload struct {

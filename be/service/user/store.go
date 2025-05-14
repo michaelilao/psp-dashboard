@@ -116,3 +116,30 @@ func (s *Store) GetUsers() ([]types.User, error) {
 	
 	return users, nil
 }
+
+
+func (s *Store) GetUsersWithTransactions() ([]types.User, error) {
+
+	coll := s.client.Database(dbName).Collection(collName)
+
+	pipeline := mongo.Pipeline{
+		{{Key: "$lookup", Value: bson.D{
+			{Key: "from", Value: "transactions"},
+			{Key: "localField", Value: "_id"},
+			{Key: "foreignField", Value: "userId"},
+			{Key: "as", Value: "transactions"},
+		}}},
+	}
+
+	cursor, err := coll.Aggregate(context.TODO(), pipeline)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []types.User
+	if err := cursor.All(context.TODO(), &users); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
