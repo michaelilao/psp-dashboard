@@ -1,9 +1,16 @@
 import { deleteUserById } from "../../api/users";
-
+import { useUserStore } from "../../store/users";
 function DeleteUserModal({ user, onClose }) {
+	const fetchUsers = useUserStore((state) => state.fetchUsers);
+
 	const handleDelete = async () => {
 		const res = await deleteUserById(user);
-		console.log(res);
+
+		if (res.error) {
+			return;
+		}
+
+		await fetchUsers();
 		onClose();
 	};
 

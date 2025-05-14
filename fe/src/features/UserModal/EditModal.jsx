@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form } from "../../components/Form/Form";
 import { updateUserById } from "../../api/users";
 import { formatErrorMessage } from "../../utils/utils";
+import { useUserStore } from "../../store/users";
 
 const FORM_FIELDS = [
 	{ id: "name", label: "Name", input: "text", required: true },
@@ -10,6 +11,8 @@ const FORM_FIELDS = [
 ];
 
 function EditUserModal({ onClose, user }) {
+	const fetchUsers = useUserStore((state) => state.fetchUsers);
+
 	const [userDetails, setUserDetails] = useState(user);
 	const [error, setError] = useState("");
 	const handleUpdate = async () => {
@@ -26,6 +29,7 @@ function EditUserModal({ onClose, user }) {
 			setError(message);
 			return;
 		}
+		await fetchUsers();
 		onClose();
 	};
 

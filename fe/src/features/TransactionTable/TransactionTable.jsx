@@ -4,102 +4,34 @@ import {
 	PlusIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "../../components/Button/Button";
-import { formatCurrency } from "../../utils/utils";
+import { formatCurrency, formatDate } from "../../utils/utils";
 import { useState } from "react";
-import { EditUserModal } from "../UserModal/EditModal";
-import { DeleteUserModal } from "../UserModal/DeleteModal";
-import { RegisterUserModal } from "../UserModal/RegisterModal";
 import { Link } from "react-router";
 
 const COLS = [
-	{ id: "name", label: "Name", isLink: true },
-	{ id: "email", label: "Email" },
+	{ id: "name", label: "Name" },
+	{ id: "amount", label: "Amount", getFormat: (num) => formatCurrency(num) },
+	{ id: "category", label: "Category" },
+	{ id: "transactionType", label: "Type" },
+	{ id: "date", label: "Date", getFormat: (s) => formatDate(s) },
 	{ id: "notes", label: "Notes" },
-	{ id: "income", label: "Income", getFormat: (num) => formatCurrency(num) },
-	{
-		id: "expenses",
-		label: "Expenses",
-		getFormat: (num) => formatCurrency(num),
-	},
-	{
-		id: "total",
-		label: "Total",
-		getFormat: (num) => formatCurrency(num),
-
-		getTextColor: (num) => {
-			if (num > 0) {
-				return "text-green-600";
-			} else if (num < 0) {
-				return "text-red-500";
-			}
-			return "text-gray-900";
-		},
-	},
 ];
 
-function UserTable({ users }) {
-	const [modifyUser, setModifyUser] = useState({
+function TransactionTable({ transactions }) {
+	const [modifyTransaction, setModifyTransaction] = useState({
 		type: "",
-		user: null,
+		transaction: null,
 	});
-
-	const getModal = () => {
-		if (modifyUser.type == "") {
-			return;
-		}
-		if (modifyUser.type == "new") {
-			return (
-				<RegisterUserModal
-					user={modifyUser.user}
-					onClose={() => {
-						setModifyUser({
-							type: "",
-							user: null,
-						});
-					}}
-				/>
-			);
-		}
-
-		if (modifyUser.type == "delete") {
-			return (
-				<DeleteUserModal
-					user={modifyUser.user}
-					onClose={() => {
-						setModifyUser({
-							type: "",
-							user: null,
-						});
-					}}
-				/>
-			);
-		}
-
-		if (modifyUser.type == "edit") {
-			return (
-				<EditUserModal
-					user={modifyUser.user}
-					onClose={() => {
-						setModifyUser({
-							type: "",
-							user: null,
-						});
-					}}
-				/>
-			);
-		}
-	};
 
 	return (
 		<>
-			{getModal()}
 			<div className="overflow-x-auto">
 				<div className="flex align-baseline gap-4">
-					<h2 className="text-2xl font-bold text-blue-500">Users</h2>
+					<h2 className="text-2xl font-bold text-blue-500">Transactions</h2>
 					<Button
 						isIcon
 						onClick={() => {
-							setModifyUser({
+							setModifyTransaction({
 								user: {},
 								type: "new",
 							});
@@ -131,11 +63,11 @@ function UserTable({ users }) {
 						</tr>
 					</thead>
 					<tbody className="divide-y divide-gray-200 ">
-						{users.map((u) => {
+						{transactions.map((t) => {
 							return (
-								<tr key={u.id}>
+								<tr key={t.id}>
 									{COLS.map((col) => {
-										let value = u?.[col.id];
+										let value = t?.[col.id];
 										let textColor = "text-gray-900";
 										if ("getTextColor" in col) {
 											textColor = col.getTextColor(value);
@@ -151,7 +83,7 @@ function UserTable({ users }) {
 													key={col.id}
 												>
 													<Link
-														to={`/users/${u.id}`}
+														to={`/users/${t.id}`}
 														className="text-blue-500 hover:underline"
 													>
 														{value}
@@ -174,9 +106,9 @@ function UserTable({ users }) {
 											<Button
 												isIcon
 												onClick={() => {
-													setModifyUser({
+													setModifyTransaction({
 														type: "edit",
-														user: u,
+														user: t,
 													});
 												}}
 											>
@@ -185,9 +117,9 @@ function UserTable({ users }) {
 											<Button
 												isIcon
 												onClick={() => {
-													setModifyUser({
+													setModifyTransaction({
 														type: "delete",
-														user: u,
+														user: t,
 													});
 												}}
 											>
@@ -205,4 +137,4 @@ function UserTable({ users }) {
 	);
 }
 
-export { UserTable };
+export { TransactionTable };

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form } from "../../components/Form/Form";
 import { createNewUser } from "../../api/users";
 import { formatErrorMessage } from "../../utils/utils";
+import { useUserStore } from "../../store/users";
 
 const FORM_FIELDS = [
 	{ id: "name", label: "Name", input: "text", required: true },
@@ -10,6 +11,7 @@ const FORM_FIELDS = [
 ];
 
 function RegisterUserModal({ onClose }) {
+	const fetchUsers = useUserStore((state) => state.fetchUsers);
 	const [userDetails, setUserDetails] = useState({});
 	const [error, setError] = useState("");
 
@@ -24,6 +26,7 @@ function RegisterUserModal({ onClose }) {
 			setError(message);
 			return;
 		}
+		await fetchUsers();
 		onClose();
 	};
 

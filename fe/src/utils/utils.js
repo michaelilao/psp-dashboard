@@ -8,6 +8,17 @@ const formatCurrency = (num) => {
 }
 
 
+const formatDate = (s) => {
+  const date = new Date(s)
+  const monthNames = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const month = monthNames[date.getUTCMonth()]
+  return `${month}, ${date.getUTCDate()} ${date.getUTCFullYear()}`
+}
+
 const formatErrorMessage = (s) => {
   const regex = /Key: '\w+\.(\w+)' Error:Field validation for '\1' failed on the '(\w+)' tag/g;
   const result = {};
@@ -25,4 +36,4 @@ const formatErrorMessage = (s) => {
 
   return result;
 }
-export {formatCurrency, formatErrorMessage}
+export {formatCurrency, formatErrorMessage, formatDate}

@@ -2,8 +2,7 @@ import { Header } from "./components/Header/Header";
 import { SideBar } from "./components/SideBar/SideBar";
 import { Routes, Route } from "react-router";
 import { Home } from "./pages/Home/Home";
-import { Users } from "./pages/Users/User";
-import { Transactions } from "./pages/Transactions/Transactions";
+import { User } from "./pages/User/User";
 
 function App() {
 	return (
@@ -16,8 +15,8 @@ function App() {
 				<Routes>
 					<Route path="/" element={<Home />} />
 					<Route path="/dashboard" element={<Home />} />
-					<Route path="/users" element={<Users />} />
-					<Route path="/transactions" element={<Transactions />} />
+					<Route path="/users" element={<User />} />
+					<Route path="/users/:userId" element={<User />} />
 				</Routes>
 			</div>
 		</div>

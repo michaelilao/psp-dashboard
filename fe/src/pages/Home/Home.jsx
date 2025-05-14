@@ -1,41 +1,13 @@
-import { useEffect, useState } from "react";
-import { fetchAllUsers } from "../../api/users";
+import { useEffect } from "react";
 import { UserTable } from "../../features/UserTable/UserTable";
+import { useUserStore } from "../../store/users";
 
 function Home() {
-	const [users, setUsers] = useState([]);
+	const { users, fetchUsers } = useUserStore((state) => state);
 
 	useEffect(() => {
-		const getUserData = async () => {
-			const res = await fetchAllUsers();
-			const u = res.data;
-
-			const formattedUsers = u.map((u) => {
-				const newU = { ...u };
-				const transactions = u.transaction;
-				let total = 0;
-				let income = 0;
-				let expenses = 0;
-				transactions.forEach((t) => {
-					if (t?.transactionType == "expense") {
-						total -= t.amount;
-						expenses += t.amount;
-					}
-					if (t?.transactionType == "income") {
-						total += t.amount;
-						income += t.amount;
-					}
-				});
-				newU.total = total;
-				newU.income = income;
-				newU.expenses = expenses;
-				return newU;
-			});
-			setUsers(formattedUsers);
-		};
-
-		getUserData();
-	}, []);
+		fetchUsers();
+	}, [fetchUsers]);
 
 	return (
 		<div>
