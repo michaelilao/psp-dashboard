@@ -1,10 +1,14 @@
-import { TrashIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import {
+	TrashIcon,
+	PencilSquareIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { Button } from "../../components/Button/Button";
 import { formatCurrency } from "../../utils/utils";
-import { Link } from "react-router";
 import { useState } from "react";
 import { EditUserModal } from "../UserModal/EditModal";
 import { DeleteUserModal } from "../UserModal/DeleteModal";
+import { RegisterUserModal } from "../UserModal/RegisterModal";
 
 const COLS = [
 	{ id: "name", label: "Name" },
@@ -38,10 +42,22 @@ function UserTable({ users }) {
 		user: null,
 	});
 
-	console.log(modifyUser);
 	const getModal = () => {
-		if (modifyUser.type == "" || modifyUser.user == null) {
+		if (modifyUser.type == "") {
 			return;
+		}
+		if (modifyUser.type == "new") {
+			return (
+				<RegisterUserModal
+					user={modifyUser.user}
+					onClose={() => {
+						setModifyUser({
+							type: "",
+							user: null,
+						});
+					}}
+				/>
+			);
 		}
 
 		if (modifyUser.type == "delete") {
@@ -78,13 +94,18 @@ function UserTable({ users }) {
 			{getModal()}
 			<div className="overflow-x-auto">
 				<div className="flex align-baseline gap-4">
-					<h2 className="text-2xl">Users</h2>
-					<Link
-						to="/register"
-						className="content-end text-blue-500 hover:underline"
+					<h2 className="text-2xl font-bold text-blue-500">Users</h2>
+					<Button
+						isIcon
+						onClick={() => {
+							setModifyUser({
+								user: {},
+								type: "new",
+							});
+						}}
 					>
-						Create New User
-					</Link>
+						<PlusIcon className="size-8 text-white rounded-md bg-blue-500 hover:bg-blue-900" />
+					</Button>
 				</div>
 				<table className="divide-y divide-gray-200">
 					<thead className="">

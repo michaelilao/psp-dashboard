@@ -39,7 +39,7 @@ function Home() {
 
 	return (
 		<div>
-			<h1 className="text-4xl mb-6">Dashboard</h1>
+			<h1 className="text-2xl mb-6 font-semibold">Dashboard</h1>
 			<UserTable users={users} />
 		</div>
 	);

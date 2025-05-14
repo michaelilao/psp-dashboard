@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form } from "../../components/Form/Form";
-import { updateUserById } from "../../api/users";
+import { createNewUser } from "../../api/users";
 import { formatErrorMessage } from "../../utils/utils";
 
 const FORM_FIELDS = [
@@ -9,20 +9,18 @@ const FORM_FIELDS = [
 	{ id: "notes", label: "Notes", input: "textarea" },
 ];
 
-function EditUserModal({ onClose, user }) {
-	const [userDetails, setUserDetails] = useState(user);
+function RegisterUserModal({ onClose }) {
+	const [userDetails, setUserDetails] = useState({});
 	const [error, setError] = useState("");
-	const handleUpdate = async () => {
-		const res = await updateUserById(userDetails);
+
+	const handleCreate = async () => {
+		const res = await createNewUser(userDetails);
 		if (res.error) {
-			console.log(res.message);
 			const err = formatErrorMessage(res.message);
-			console.log(err);
 			const message = Object.entries(err).reduce((m, curr) => {
 				m += `${curr[0]} is ${curr[1]}\n`;
 				return m;
 			}, "");
-			console.log(message);
 			setError(message);
 			return;
 		}
@@ -32,9 +30,7 @@ function EditUserModal({ onClose, user }) {
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
 			<div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative opacity-100 z-55">
-				<h2 className="text-lg font-semibold text-gray-800 mb-4">
-					Edit {user.name}
-				</h2>
+				<h2 className="text-lg font-semibold text-gray-800 mb-4">Create</h2>
 				<Form
 					setState={setUserDetails}
 					state={userDetails}
@@ -48,10 +44,10 @@ function EditUserModal({ onClose, user }) {
 						Close
 					</button>
 					<button
-						onClick={handleUpdate}
+						onClick={handleCreate}
 						className="mt-2 px-3 py-1.5 bg-blue-400 text-white rounded hover:bg-blue-700 transition cursor-pointer"
 					>
-						Update
+						Create
 					</button>
 				</div>
 				<div className="text-xs text-red-500 whitespace-pre-wrap mt-2">
@@ -62,4 +58,4 @@ function EditUserModal({ onClose, user }) {
 	);
 }
 
-export { EditUserModal };
+export { RegisterUserModal };

@@ -1,5 +1,9 @@
+import { deleteUserById } from "../../api/users";
+
 function DeleteUserModal({ user, onClose }) {
 	const handleDelete = async () => {
+		const res = await deleteUserById(user);
+		console.log(res);
 		onClose();
 	};
 
