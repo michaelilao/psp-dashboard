@@ -7,6 +7,7 @@ import (
 	"psp-dashboard-be/utils"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -25,6 +26,31 @@ func NewHandler(store types.UserStore) *Handler{
 func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /user", h.HandleGetUsers)
 	router.HandleFunc("POST /user", h.HandleCreateUser)
+	router.HandleFunc("DELETE /user/{userId}", h.HandleDeleteUserById)
+}
+
+
+func (h *Handler) HandleDeleteUserById(w http.ResponseWriter, r *http.Request) {
+ 	userId := r.PathValue("userId")
+	if userId == "" {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty userId"))
+		return
+	}
+
+	objectId, err := primitive.ObjectIDFromHex(userId)
+	if err != nil {
+		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid userId %v", err))
+		return
+	}
+
+	err = h.store.DeleteUserById(objectId)
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error deleting user %v", err))
+		return
+	}
+
+	utils.WriteJSON(w, http.StatusOK, true)
+
 }
 
 func (h *Handler) HandleGetUsers(w http.ResponseWriter, r *http.Request) {

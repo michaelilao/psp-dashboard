@@ -2,6 +2,7 @@ package user
 
 import (
 	"context"
+	"fmt"
 	"psp-dashboard-be/types"
 
 	"go.mongodb.org/mongo-driver/bson"
@@ -22,7 +23,17 @@ func NewStore(client *mongo.Client) *Store {
 
 
 func (s *Store) DeleteUserById(userId primitive.ObjectID) (error) {
+	coll := s.client.Database(dbName).Collection(collName)
+	
+	filter := bson.D{{Key: "_id", Value: userId}}
+	result, err := coll.DeleteOne(context.TODO(), filter)
+	if err != nil {
+		return err
+	}
 
+	if result.DeletedCount == 0{
+		return fmt.Errorf("userid does not exist")
+	}
 	return nil
 }
 
