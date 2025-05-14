@@ -7,7 +7,7 @@ import { NavLink } from "react-router";
 
 function SideBar() {
 	return (
-		<div className="bg-slate-300 h-full flex flex-col pt-24 gap-4">
+		<div className="bg-slate-300 h-full flex flex-col pt-12 gap-4">
 			<SideBarButton Icon={Squares2X2Icon} path="/" />
 			<SideBarButton Icon={CreditCardIcon} path="transactions" />
 			<SideBarButton Icon={UsersIcon} path="users" />

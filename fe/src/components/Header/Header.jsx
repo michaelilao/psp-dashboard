@@ -1,9 +1,5 @@
 function Header() {
-	return (
-		<header>
-			<div>Header</div>
-		</header>
-	);
+	return <></>;
 }
 
 export { Header };
