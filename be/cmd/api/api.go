@@ -1,14 +1,22 @@
 package api
 
-import "net/http"
+import (
+	"log"
+	"net/http"
+	"psp-dashboard-be/service/user"
+
+	"go.mongodb.org/mongo-driver/mongo"
+)
 
 type APIServer struct {
 	addr string
+	db *mongo.Client
 }
 
-func NewAPIServer(addr string) *APIServer {
+func NewAPIServer(addr string, db *mongo.Client) *APIServer {
 	return &APIServer{
 		addr: addr,
+		db: db,
 	}
 }
 
@@ -16,6 +24,11 @@ func (s *APIServer) Run() error {
 
 	router := http.NewServeMux()
 
+	userStore := user.NewStore(s.db)
+	userHandler := user.NewHandler(userStore)
+	userHandler.RegisterRoutes(router)
+
+	
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
@@ -29,5 +42,6 @@ func (s *APIServer) Run() error {
 		Handler: router,
 	}
 
+	log.Println("server running on port"+s.addr)
 	return server.ListenAndServe()
 }
