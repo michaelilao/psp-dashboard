@@ -3,11 +3,14 @@ package types
 import (
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type TransactionStore interface {
 	CreateTransaction(transaction Transaction) (primitive.ObjectID, error)
+	GetTransactionsByQuery(filter bson.D) ([]Transaction, error)
+	DeleteTransactionByID(trainsactionID primitive.ObjectID) (error)
 }
 
 type Transaction struct {
@@ -16,7 +19,7 @@ type Transaction struct {
 	Date 						time.Time           `bson:"date"`
 	Category				string							`bson:"category"`
 	TransactionType	string							`bson:"transactionType"` 
-	Amount					int									`bson:"int"`
+	Amount					int									`bson:"amount"`
 	Name						string							`bson:"name"`
 	Notes 					string						 	`bson:"notes"`
 }

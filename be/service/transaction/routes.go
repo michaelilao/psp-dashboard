@@ -2,12 +2,14 @@ package transaction
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"psp-dashboard-be/types"
 	"psp-dashboard-be/utils"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Handler struct {
@@ -27,12 +29,65 @@ func NewHandler(store types.TransactionStore, userStore types.UserStore) *Handle
 func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /transaction", h.HandleCreateTransaction)
 	router.HandleFunc("GET /transaction", h.HandleGetTransactions)
+	router.HandleFunc("DELETE /transaction/{transactionID}", h.HandleDeleteTransactionByID)
+	router.HandleFunc("PATCH /transaction/{transactionID}", h.HandleUpdateTransactionByID)
 }
 
 
-func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) {
+func (h *Handler) HandleUpdateTransactionByID(w http.ResponseWriter, r *http.Request) {
+		transactionID := r.PathValue("transactionID")
+		if transactionID == "" {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty transactionid"))
+			return
+		}
 
-		utils.WriteJSON(w, http.StatusOK, "Get Transactions")
+		utils.WriteJSON(w, http.StatusOK, true)
+		
+}
+
+
+func (h *Handler) HandleDeleteTransactionByID(w http.ResponseWriter, r *http.Request) {
+		transactionID := r.PathValue("transactionID")
+		if transactionID == "" {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty transactionid"))
+			return
+		}
+
+		objectId, err := primitive.ObjectIDFromHex(transactionID)
+		if err != nil {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid transactionid %v", err))
+			return
+		}
+
+		err = h.store.DeleteTransactionByID(objectId)
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error deleting transaction %v", err))
+			return
+		}
+	
+		utils.WriteJSON(w, http.StatusOK, true)
+
+}
+
+func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) {
+	  // Possible Queries
+
+		// can take as strings
+		query, err := CreateQuery(r.URL.Query())
+		if err != nil {
+				utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid query %v", err))
+				return
+		}
+			
+		log.Println(query)
+		transactions, err := h.store.GetTransactionsByQuery(query)				
+		if err != nil {
+			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error fetching transactions %v", err))
+			return
+		}
+
+	
+		utils.WriteJSON(w, http.StatusOK, transactions)
 }
 
 func (h *Handler) HandleCreateTransaction(w http.ResponseWriter, r *http.Request) {
