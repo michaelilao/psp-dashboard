@@ -11,10 +11,10 @@ import (
 
 
 func CreateQuery(q url.Values) (bson.D, error){
-	transactionID := q.Get("transactionID")
+	transactionId := q.Get("transactionId")
 	query := bson.D{}
-	if transactionID != "" {	
-		objectId, err := primitive.ObjectIDFromHex(transactionID)
+	if transactionId != "" {	
+		objectId, err := primitive.ObjectIDFromHex(transactionId)
 		if err != nil {
 			return nil, err
 		}
@@ -23,13 +23,13 @@ func CreateQuery(q url.Values) (bson.D, error){
 	} 
 	
 
-	userID := q.Get("userID")
-	if userID != "" {
-			userObjectId, err := primitive.ObjectIDFromHex(userID)
+	userId := q.Get("userId")
+	if userId != "" {
+			userObjectId, err := primitive.ObjectIDFromHex(userId)
 			if err != nil {
 				return nil, err
 			}
-			query = append(query, bson.E{Key: "userID", Value: userObjectId})
+			query = append(query, bson.E{Key: "userId", Value: userObjectId})
 	}
 
 

@@ -69,6 +69,6 @@ func (h *Handler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	newUser.ID = id
+	newUser.Id = id
 	utils.WriteJSON(w, http.StatusOK, newUser)
 }

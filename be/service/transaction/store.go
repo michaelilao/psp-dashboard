@@ -21,9 +21,9 @@ func NewStore(client *mongo.Client) *Store {
 	return &Store{client: client}
 }
 
-func (s *Store) UpdateTransactionByID(transaction types.Transaction) (error) {
+func (s *Store) UpdateTransactionById(transaction types.Transaction) (error) {
 	coll := s.client.Database(dbName).Collection(collName)
-	filter := bson.D{{Key: "_id", Value: transaction.ID}}
+	filter := bson.D{{Key: "_id", Value: transaction.Id}}
 	
 	result, err := coll.ReplaceOne(context.TODO(), filter, transaction)
 	if err != nil {
@@ -66,10 +66,10 @@ func (s *Store) GetTransactionsByQuery(filter bson.D) ([]types.Transaction, erro
 	return transactions, nil
 }
 
-func (s* Store) DeleteTransactionByID(transactionID primitive.ObjectID) (error) {
+func (s* Store) DeleteTransactionById(transactionId primitive.ObjectID) (error) {
 	coll := s.client.Database(dbName).Collection(collName)
 	
-	filter := bson.D{{Key: "_id", Value: transactionID}}
+	filter := bson.D{{Key: "_id", Value: transactionId}}
 	result, err := coll.DeleteOne(context.TODO(), filter)
 	if err != nil {
 		return err

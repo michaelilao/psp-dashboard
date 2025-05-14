@@ -30,19 +30,19 @@ func NewHandler(store types.TransactionStore, userStore types.UserStore) *Handle
 func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("POST /transaction", h.HandleCreateTransaction)
 	router.HandleFunc("GET /transaction", h.HandleGetTransactions)
-	router.HandleFunc("DELETE /transaction/{transactionID}", h.HandleDeleteTransactionByID)
-	router.HandleFunc("PUT /transaction/{transactionID}", h.HandleUpdateTransactionByID)
+	router.HandleFunc("DELETE /transaction/{transactionId}", h.HandleDeleteTransactionById)
+	router.HandleFunc("PUT /transaction/{transactionId}", h.HandleUpdateTransactionById)
 }
 
 
-func (h *Handler) HandleUpdateTransactionByID(w http.ResponseWriter, r *http.Request) {
-		transactionID := r.PathValue("transactionID")
-		if transactionID == "" {
+func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Request) {
+		transactionId := r.PathValue("transactionId")
+		if transactionId == "" {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty transactionid"))
 			return
 		}
 
-		objectId, err := primitive.ObjectIDFromHex(transactionID)
+		objectId, err := primitive.ObjectIDFromHex(transactionId)
 		if err != nil {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid transactionid %v", err))
 			return
@@ -86,7 +86,7 @@ func (h *Handler) HandleUpdateTransactionByID(w http.ResponseWriter, r *http.Req
 			existingTransaction.Date = date
 		}
 
-		err = h.store.UpdateTransactionByID(existingTransaction)
+		err = h.store.UpdateTransactionById(existingTransaction)
 		if err != nil {
 			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error updating transaction %v", err))
 			return
@@ -99,20 +99,20 @@ func (h *Handler) HandleUpdateTransactionByID(w http.ResponseWriter, r *http.Req
 }
 
 
-func (h *Handler) HandleDeleteTransactionByID(w http.ResponseWriter, r *http.Request) {
-		transactionID := r.PathValue("transactionID")
-		if transactionID == "" {
+func (h *Handler) HandleDeleteTransactionById(w http.ResponseWriter, r *http.Request) {
+		transactionId := r.PathValue("transactionId")
+		if transactionId == "" {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty transactionid"))
 			return
 		}
 
-		objectId, err := primitive.ObjectIDFromHex(transactionID)
+		objectId, err := primitive.ObjectIDFromHex(transactionId)
 		if err != nil {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid transactionid %v", err))
 			return
 		}
 
-		err = h.store.DeleteTransactionByID(objectId)
+		err = h.store.DeleteTransactionById(objectId)
 		if err != nil {
 			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error deleting transaction %v", err))
 			return
@@ -157,7 +157,7 @@ func (h *Handler) HandleCreateTransaction(w http.ResponseWriter, r *http.Request
 	}
 
 	// Check if user exists
-	user, err := h.userStore.GetUserByID(payload.UserID)
+	user, err := h.userStore.GetUserById(payload.UserId)
 	if err != nil {
 		utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("user does not exist %v", err))
 		return
@@ -165,7 +165,7 @@ func (h *Handler) HandleCreateTransaction(w http.ResponseWriter, r *http.Request
 
 	
 	newTransaction := types.Transaction{
-		UserID: 					user.ID,	
+		UserId: 					user.Id,	
 		Category: 				payload.Category,
 		TransactionType: 	payload.TransactionType,
 		Amount: 					payload.Amount,
@@ -188,6 +188,6 @@ func (h *Handler) HandleCreateTransaction(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	newTransaction.ID = id
+	newTransaction.Id = id
 	utils.WriteJSON(w, http.StatusOK, newTransaction)
 }

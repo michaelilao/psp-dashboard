@@ -21,6 +21,18 @@ func NewStore(client *mongo.Client) *Store {
 }
 
 
+func (s *Store) DeleteUserById(userId primitive.ObjectID) (error) {
+
+	return nil
+}
+
+
+func (s *Store) UpdateUserById(user types.User) (error) {
+
+	return nil
+}
+
+
 func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	coll := s.client.Database(dbName).Collection(collName)
 	
@@ -34,7 +46,7 @@ func (s *Store) GetUserByEmail(email string) (*types.User, error) {
 	return user, nil
 }
 
-func (s *Store) GetUserByID(id string) (*types.User, error) {
+func (s *Store) GetUserById(id string) (*types.User, error) {
 	coll := s.client.Database(dbName).Collection(collName)
 	user := &types.User{}
 
