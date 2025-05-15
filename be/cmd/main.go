@@ -15,9 +15,9 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-// @title PSP Backend API
+// @title Expense Management Dashboard API
 // @version 1.0
-// @description Expense Tracking Dashboard
+// @description Expense Tracking Dashboard for PSP Take Home Assignment
 // @host localhost:8080
 // @BasePath /
 

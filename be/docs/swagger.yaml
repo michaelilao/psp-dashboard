@@ -2,11 +2,6 @@ basePath: /
 definitions:
   types.CreateTransactionPayload:
     properties:
-      TransactionType:
-        enum:
-        - income
-        - expense
-        type: string
       amount:
         type: integer
       category:
@@ -17,12 +12,17 @@ definitions:
         type: string
       notes:
         type: string
+      transactionType:
+        enum:
+        - income
+        - expense
+        type: string
       userId:
         type: string
     required:
-    - TransactionType
     - amount
     - category
+    - transactionType
     - userId
     type: object
   types.Transaction:
@@ -46,11 +46,6 @@ definitions:
     type: object
   types.UpdateTransactionPayload:
     properties:
-      TransactionType:
-        enum:
-        - income
-        - expense
-        type: string
       amount:
         type: integer
       category:
@@ -61,9 +56,14 @@ definitions:
         type: string
       notes:
         type: string
+      transactionType:
+        enum:
+        - income
+        - expense
+        type: string
     required:
-    - TransactionType
     - amount
+    - transactionType
     type: object
   types.UpdateUserPayload:
     properties:
@@ -95,8 +95,8 @@ definitions:
 host: localhost:8080
 info:
   contact: {}
-  description: Expense Tracking Dashboard
-  title: PSP Backend API
+  description: Expense Tracking Dashboard for PSP Take Home Assignment
+  title: Expense Management Dashboard API
   version: "1.0"
 paths:
   /transaction:

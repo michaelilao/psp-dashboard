@@ -263,19 +263,12 @@ const docTemplate = `{
         "types.CreateTransactionPayload": {
             "type": "object",
             "required": [
-                "TransactionType",
                 "amount",
                 "category",
+                "transactionType",
                 "userId"
             ],
             "properties": {
-                "TransactionType": {
-                    "type": "string",
-                    "enum": [
-                        "income",
-                        "expense"
-                    ]
-                },
                 "amount": {
                     "type": "integer"
                 },
@@ -290,6 +283,13 @@ const docTemplate = `{
                 },
                 "notes": {
                     "type": "string"
+                },
+                "transactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
                 },
                 "userId": {
                     "type": "string"
@@ -328,17 +328,10 @@ const docTemplate = `{
         "types.UpdateTransactionPayload": {
             "type": "object",
             "required": [
-                "TransactionType",
-                "amount"
+                "amount",
+                "transactionType"
             ],
             "properties": {
-                "TransactionType": {
-                    "type": "string",
-                    "enum": [
-                        "income",
-                        "expense"
-                    ]
-                },
                 "amount": {
                     "type": "integer"
                 },
@@ -353,6 +346,13 @@ const docTemplate = `{
                 },
                 "notes": {
                     "type": "string"
+                },
+                "transactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
                 }
             }
         },
@@ -406,8 +406,8 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "PSP Backend API",
-	Description:      "Expense Tracking Dashboard",
+	Title:            "Expense Management Dashboard API",
+	Description:      "Expense Tracking Dashboard for PSP Take Home Assignment",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 	LeftDelim:        "{{",

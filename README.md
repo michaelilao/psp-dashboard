@@ -62,4 +62,9 @@ The backend API is documented using swagger and can be accessed at
 http://localhost:8080/swagger/index.html
 ```
 
-After modifying the swagger docs run `swag init -g cmd/main.go` to update the docs
+After modifying the swagger docs run below to update the docs
+
+```bash
+cd be
+swag init -g cmd/main.go
+```

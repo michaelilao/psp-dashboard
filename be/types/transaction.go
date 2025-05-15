@@ -29,7 +29,7 @@ type CreateTransactionPayload struct {
 	UserId						string 	`json:"userId" validate:"required"`
 	Date							string 	`json:"date"`
 	Category					string	`json:"category" validate:"required"`
-	TransactionType		string 	`json:"TransactionType" validate:"required,oneof=income expense"`
+	TransactionType		string 	`json:"transactionType" validate:"required,oneof=income expense"`
 	Amount						int  		`json:"amount" validate:"required"`
 	Name  						string 	`json:"name"`
 	Notes 						string 	`json:"notes"`
@@ -39,7 +39,7 @@ type CreateTransactionPayload struct {
 type UpdateTransactionPayload struct {
 	Date							string 	`json:"date"`
 	Category					string	`json:"category"`
-	TransactionType		string 	`json:"TransactionType" validate:"required,oneof=income expense"`
+	TransactionType		string 	`json:"transactionType" validate:"required,oneof=income expense"`
 	Amount						int  		`json:"amount" validate:"required"`
 	Name  						string 	`json:"name"`
 	Notes 						string 	`json:"notes"`

@@ -1,8 +1,8 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Expense Tracking Dashboard",
-        "title": "PSP Backend API",
+        "description": "Expense Tracking Dashboard for PSP Take Home Assignment",
+        "title": "Expense Management Dashboard API",
         "contact": {},
         "version": "1.0"
     },
@@ -257,19 +257,12 @@
         "types.CreateTransactionPayload": {
             "type": "object",
             "required": [
-                "TransactionType",
                 "amount",
                 "category",
+                "transactionType",
                 "userId"
             ],
             "properties": {
-                "TransactionType": {
-                    "type": "string",
-                    "enum": [
-                        "income",
-                        "expense"
-                    ]
-                },
                 "amount": {
                     "type": "integer"
                 },
@@ -284,6 +277,13 @@
                 },
                 "notes": {
                     "type": "string"
+                },
+                "transactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
                 },
                 "userId": {
                     "type": "string"
@@ -322,17 +322,10 @@
         "types.UpdateTransactionPayload": {
             "type": "object",
             "required": [
-                "TransactionType",
-                "amount"
+                "amount",
+                "transactionType"
             ],
             "properties": {
-                "TransactionType": {
-                    "type": "string",
-                    "enum": [
-                        "income",
-                        "expense"
-                    ]
-                },
                 "amount": {
                     "type": "integer"
                 },
@@ -347,6 +340,13 @@
                 },
                 "notes": {
                     "type": "string"
+                },
+                "transactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
                 }
             }
         },
