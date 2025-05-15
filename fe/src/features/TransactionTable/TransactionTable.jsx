@@ -4,16 +4,17 @@ import {
 	PlusIcon,
 } from "@heroicons/react/24/outline";
 import { Button } from "../../components/Button/Button";
-import { formatCurrency, formatDate } from "../../utils/utils";
+import { capitalize, formatCurrency, formatDate } from "../../utils/utils";
 import { useState } from "react";
 import { DeleteTransactionModal } from "../TransactionModal/DeleteModal";
 import { CreateTransactionModal } from "../TransactionModal/CreateModal";
+import { EditTransactionModal } from "../TransactionModal/EditModal";
 
 const COLS = [
 	{ id: "name", label: "Name" },
 	{ id: "amount", label: "Amount", getFormat: (num) => formatCurrency(num) },
 	{ id: "category", label: "Category" },
-	{ id: "transactionType", label: "Type" },
+	{ id: "transactionType", label: "Type", getFormat: (s) => capitalize(s) },
 	{ id: "date", label: "Date", getFormat: (s) => formatDate(s) },
 	{ id: "notes", label: "Notes" },
 ];
@@ -35,6 +36,15 @@ function TransactionTable({ transactions, userId }) {
 				transaction: null,
 			});
 		};
+
+		if (modifyTransaction.type == "edit") {
+			return (
+				<EditTransactionModal
+					onClose={onClose}
+					transaction={modifyTransaction.transaction}
+				/>
+			);
+		}
 
 		if (modifyTransaction.type == "new") {
 			return <CreateTransactionModal onClose={onClose} userId={userId} />;

@@ -92,5 +92,36 @@ async function createNewTransaction(transaction) {
   }
 }
 
+async function updateTransactionById(transaction) {
+  const uri = new URL(`transaction/${transaction.id}`, api)
+  try {
+    const res = await fetch(uri, {
+      method:"PUT",
+      body: JSON.stringify(transaction)
+    })
+    if (res.ok) {
+      const json = await res.json()
+      return {
+        error: false,
+        data: json
+      }    
+    }
+    const error = await res.json()
+    const message = error?.error 
+    return {
+      error: true,
+      message: message,
+      data: {}
+    }
+  } catch(err) {
+    console.error(err)
+    return {
+      error: true,
+      data: {}
+    }
+  }
+}
 
-export { fetchTransactionsByUserId, deleteTransactionById, createNewTransaction }
+
+
+export { fetchTransactionsByUserId, deleteTransactionById, createNewTransaction, updateTransactionById }

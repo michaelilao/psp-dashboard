@@ -1,35 +1,31 @@
 import { useState } from "react";
 import { Form } from "../../components/Form/Form";
-import { updateUserById } from "../../api/users";
 import { formatErrorMessage } from "../../utils/utils";
-import { useUserStore } from "../../store/users";
+import { useTransactionsStore } from "../../store/transactions";
+import { updateTransactionById } from "../../api/transactions";
 
-const FORM_FIELDS = [
-	{ id: "name", label: "Name", input: "text", required: true },
-	{ id: "email", label: "Email", input: "email", required: true },
-	{ id: "notes", label: "Notes", input: "textarea" },
-];
+import { FORM_FIELDS } from "./formFields";
 
-function EditUserModal({ onClose, user }) {
-	const fetchUsers = useUserStore((state) => state.fetchUsers);
-
-	const [userDetails, setUserDetails] = useState(user);
+function EditTransactionModal({ onClose, transaction }) {
+	const fetchTransactions = useTransactionsStore(
+		(state) => state.fetchTransactions
+	);
+	const [transactionDetails, setTransactionDetails] = useState(transaction);
 	const [error, setError] = useState("");
+
 	const handleUpdate = async () => {
-		const res = await updateUserById(userDetails);
+		const res = await updateTransactionById(transactionDetails);
 		if (res.error) {
-			console.log(res.message);
 			const err = formatErrorMessage(res.message);
-			console.log(err);
 			const message = Object.entries(err).reduce((m, curr) => {
 				m += `${curr[0]} is ${curr[1]}\n`;
 				return m;
 			}, "");
-			console.log(message);
 			setError(message);
 			return;
 		}
-		await fetchUsers();
+
+		await fetchTransactions(transaction.userId);
 		onClose();
 	};
 
@@ -37,11 +33,11 @@ function EditUserModal({ onClose, user }) {
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/20">
 			<div className="bg-white rounded-lg shadow-lg w-full max-w-md p-6 relative opacity-100 z-55">
 				<h2 className="text-lg font-semibold text-gray-800 mb-4">
-					Edit {user.name}
+					Edit Transaction
 				</h2>
 				<Form
-					setState={setUserDetails}
-					state={userDetails}
+					setState={setTransactionDetails}
+					state={transactionDetails}
 					fields={FORM_FIELDS}
 				/>
 				<div className="flex justify-between">
@@ -66,4 +62,4 @@ function EditUserModal({ onClose, user }) {
 	);
 }
 
-export { EditUserModal };
+export { EditTransactionModal };

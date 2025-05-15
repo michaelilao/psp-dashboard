@@ -3,30 +3,10 @@ import { Form } from "../../components/Form/Form";
 import { formatErrorMessage } from "../../utils/utils";
 import { useTransactionsStore } from "../../store/transactions";
 import { createNewTransaction } from "../../api/transactions";
-
-const FORM_FIELDS = [
-	{ id: "name", label: "Name", input: "text", required: true },
-	{ id: "amount", label: "Amount", input: "number", required: true },
-	{
-		id: "category",
-		label: "Category",
-		input: "select",
-		options: ["Groceries", "Rent", "Salary", "Dividends", "Investments"],
-		required: true,
-	},
-	{
-		id: "transactionType",
-		label: "Type",
-		input: "select",
-		options: ["income", "expense"],
-		required: true,
-	},
-	{ id: "date", label: "Date", input: "date", required: true },
-	{ id: "notes", label: "Notes", input: "textarea" },
-];
+import { FORM_FIELDS } from "./formFields";
 
 function CreateTransactionModal({ onClose, userId }) {
-	const { fetchTransactions } = useTransactionsStore(
+	const fetchTransactions = useTransactionsStore(
 		(state) => state.fetchTransactions
 	);
 	const [transactionDetails, setTransactionDetails] = useState({});
@@ -44,6 +24,7 @@ function CreateTransactionModal({ onClose, userId }) {
 			setError(message);
 			return;
 		}
+
 		await fetchTransactions(userId);
 		onClose();
 	};

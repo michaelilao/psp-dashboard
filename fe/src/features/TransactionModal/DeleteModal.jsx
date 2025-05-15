@@ -2,7 +2,7 @@ import { deleteTransactionById } from "../../api/transactions";
 import { useTransactionsStore } from "../../store/transactions";
 
 function DeleteTransactionModal({ transaction, onClose }) {
-	const { fetchTransactions } = useTransactionsStore(
+	const fetchTransactions = useTransactionsStore(
 		(state) => state.fetchTransactions
 	);
 

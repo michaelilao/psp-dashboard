@@ -3,12 +3,7 @@ import { Form } from "../../components/Form/Form";
 import { createNewUser } from "../../api/users";
 import { formatErrorMessage } from "../../utils/utils";
 import { useUserStore } from "../../store/users";
-
-const FORM_FIELDS = [
-	{ id: "name", label: "Name", input: "text", required: true },
-	{ id: "email", label: "Email", input: "email", required: true },
-	{ id: "notes", label: "Notes", input: "textarea" },
-];
+import { FORM_FIELDS } from "./formFields";
 
 function RegisterUserModal({ onClose }) {
 	const fetchUsers = useUserStore((state) => state.fetchUsers);

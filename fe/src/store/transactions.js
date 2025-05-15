@@ -9,4 +9,4 @@ const useTransactionsStore = create((set) => ({
   },
 }))
 
-export { useTransactionsStore,  }
+export { useTransactionsStore }

@@ -24,6 +24,7 @@ function Select({ field, state, setState }) {
 				name={field.id}
 				value={state?.[field.id]}
 			>
+				<option value={""}></option>
 				{field.options.map((o) => {
 					return (
 						<option key={o} value={o}>

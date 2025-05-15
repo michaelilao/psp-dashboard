@@ -11,7 +11,9 @@ function Home() {
 
 	return (
 		<div>
-			<h1 className="text-2xl mb-6 font-semibold">Dashboard</h1>
+			<h1 className="text-2xl mb-6 font-semibold">
+				Expense Management Dashboard
+			</h1>
 			<UserTable users={users} />
 		</div>
 	);

@@ -6,14 +6,19 @@ function Form({ state, setState, fields }) {
 	return (
 		<form onSubmit={(e) => e.preventDefault()}>
 			{fields.map((field) => {
+				const props = {
+					field: field,
+					state: state,
+					setState: setState,
+				};
+
 				if (field.input == "textarea") {
-					return <TextArea field={field} state={state} setState={setState} />;
+					return <TextArea key={field.id} {...props} />;
 				}
 				if (field.input == "select") {
-					return <Select field={field} state={state} setState={setState} />;
+					return <Select key={field.id} {...props} />;
 				}
-
-				return <Input field={field} state={state} setState={setState} />;
+				return <Input key={field.id} {...props} />;
 			})}
 		</form>
 	);

@@ -1,4 +1,12 @@
 function Input({ field, state, setState }) {
+	let value = state?.[field.id];
+	if (field.input == "date") {
+		let date = new Date();
+		if (value) {
+			date = new Date(value || "");
+		}
+		value = date.toISOString().split("T")[0];
+	}
 	return (
 		<div key={field.id} className="mb-2">
 			<label
@@ -13,13 +21,17 @@ function Input({ field, state, setState }) {
 				type={field.input}
 				onChange={(e) => {
 					setState((curr) => {
-						return { ...curr, [field.id]: e.target.value };
+						let newValue = e.target.value;
+						if (field.input == "number") {
+							newValue = Number(newValue);
+						}
+						return { ...curr, [field.id]: newValue };
 					});
 				}}
 				className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm"
 				id={field.id}
 				name={field.id}
-				value={state?.[field.id]}
+				value={value}
 			/>
 		</div>
 	);
