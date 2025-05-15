@@ -7,11 +7,12 @@ visualization.
 
 ## Development
 
-There are 3 components to this System
+There are 3 components to this System and Tech Stack used.
 
 - Go Backend API
 - MongoDB Database
 - React Frontent App
+- Chart.js for Data Visualization
 
 To begin development start by copying `sample.env` to `.env` and making a copy of `.env` in `fe` and `be`
 
