@@ -50,7 +50,6 @@ function UserId({ userId }) {
 						/>
 					</div>
 				) : null}
-
 				{transactions && transactions.length > 0 ? (
 					<div className="h-82">
 						<TransactionLineGraph
