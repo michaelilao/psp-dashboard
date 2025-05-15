@@ -36,4 +36,10 @@ const formatErrorMessage = (s) => {
 
   return result;
 }
-export {formatCurrency, formatErrorMessage, formatDate}
+
+function capitalize(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+}
+
+
+export {formatCurrency, formatErrorMessage, formatDate, capitalize}

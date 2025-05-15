@@ -24,7 +24,7 @@ function User() {
 	return (
 		<div>
 			<h1 className="text-2xl mb-6 font-semibold">{user?.name}</h1>
-			<TransactionTable transactions={transactions || []} />
+			<TransactionTable transactions={transactions || []} userId={userId} />
 		</div>
 	);
 }

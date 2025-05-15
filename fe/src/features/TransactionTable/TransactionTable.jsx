@@ -6,7 +6,8 @@ import {
 import { Button } from "../../components/Button/Button";
 import { formatCurrency, formatDate } from "../../utils/utils";
 import { useState } from "react";
-import { Link } from "react-router";
+import { DeleteTransactionModal } from "../TransactionModal/DeleteModal";
+import { CreateTransactionModal } from "../TransactionModal/CreateModal";
 
 const COLS = [
 	{ id: "name", label: "Name" },
@@ -17,14 +18,41 @@ const COLS = [
 	{ id: "notes", label: "Notes" },
 ];
 
-function TransactionTable({ transactions }) {
+function TransactionTable({ transactions, userId }) {
 	const [modifyTransaction, setModifyTransaction] = useState({
 		type: "",
 		transaction: null,
 	});
 
+	const getModal = () => {
+		if (modifyTransaction.type == "") {
+			return;
+		}
+
+		const onClose = () => {
+			setModifyTransaction({
+				type: "",
+				transaction: null,
+			});
+		};
+
+		if (modifyTransaction.type == "new") {
+			return <CreateTransactionModal onClose={onClose} userId={userId} />;
+		}
+
+		if (modifyTransaction.type == "delete") {
+			return (
+				<DeleteTransactionModal
+					transaction={modifyTransaction.transaction}
+					onClose={onClose}
+				/>
+			);
+		}
+	};
+
 	return (
 		<>
+			{getModal()}
 			<div className="overflow-x-auto">
 				<div className="flex align-baseline gap-4">
 					<h2 className="text-2xl font-bold text-blue-500">Transactions</h2>
@@ -32,7 +60,7 @@ function TransactionTable({ transactions }) {
 						isIcon
 						onClick={() => {
 							setModifyTransaction({
-								user: {},
+								transaction: {},
 								type: "new",
 							});
 						}}
@@ -76,22 +104,6 @@ function TransactionTable({ transactions }) {
 											value = col.getFormat(value);
 										}
 
-										if (col.isLink) {
-											return (
-												<td
-													className={`px-6 py-4 whitespace-nowrap text-sm ${textColor}`}
-													key={col.id}
-												>
-													<Link
-														to={`/users/${t.id}`}
-														className="text-blue-500 hover:underline"
-													>
-														{value}
-													</Link>
-												</td>
-											);
-										}
-
 										return (
 											<td
 												className={`px-6 py-4 whitespace-nowrap text-sm ${textColor}`}
@@ -108,7 +120,7 @@ function TransactionTable({ transactions }) {
 												onClick={() => {
 													setModifyTransaction({
 														type: "edit",
-														user: t,
+														transaction: t,
 													});
 												}}
 											>
@@ -119,7 +131,7 @@ function TransactionTable({ transactions }) {
 												onClick={() => {
 													setModifyTransaction({
 														type: "delete",
-														user: t,
+														transaction: t,
 													});
 												}}
 											>
