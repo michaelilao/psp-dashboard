@@ -63,7 +63,7 @@ function TransactionTable({ transactions, userId }) {
 	return (
 		<>
 			{getModal()}
-			<div className="overflow-x-auto">
+			<div className="overflow-auto max-h-[40vh]">
 				<div className="flex align-baseline gap-4">
 					<h2 className="text-2xl font-bold text-blue-500">Transactions</h2>
 					<Button
@@ -79,7 +79,7 @@ function TransactionTable({ transactions, userId }) {
 					</Button>
 				</div>
 				<table className="divide-y divide-gray-200">
-					<thead className="">
+					<thead className="sticky top-0 bg-slate-100 z-10">
 						<tr>
 							{COLS.map((col) => {
 								return (
