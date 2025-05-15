@@ -8,10 +8,18 @@ import (
 	"psp-dashboard-be/cmd/api"
 	"time"
 
+	_ "psp-dashboard-be/docs"
+
 	"github.com/joho/godotenv"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
+
+// @title PSP Backend API
+// @version 1.0
+// @description Expense Tracking Dashboard
+// @host localhost:8080
+// @BasePath /
 
 func main() {
 
@@ -30,7 +38,6 @@ func main() {
 	dbPort := os.Getenv("DB_PORT")
 
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", user, pass, host, dbPort)
-	
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 

@@ -27,9 +27,17 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 	router.HandleFunc("GET /user", h.HandleGetUsers)
 	router.HandleFunc("POST /user", h.HandleCreateUser)
 	router.HandleFunc("DELETE /user/{userId}", h.HandleDeleteUserById)
-	router.HandleFunc("PUT /user/{userId}", h.HandleUpdateUserById)
-	
+	router.HandleFunc("PUT /user/{userId}", h.HandleUpdateUserById)	
 }
+
+// @Summary Updates User by Id
+// @tags User
+// @Produce json
+// @Accept  json
+// @Param   user  body     types.UpdateUserPayload  true  "User to update"
+// @Param id path string true "User ID"
+// @Success 200 {object} types.User
+// @Router /user/{userId} [PUT]
 func (h *Handler) HandleUpdateUserById(w http.ResponseWriter, r *http.Request) {
 	userId := r.PathValue("userId")
 	if userId == "" {
@@ -69,6 +77,13 @@ func (h *Handler) HandleUpdateUserById(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, existingUser)
 }
 
+
+// @Summary Delete User by Id
+// @tags User
+// @Produce  json
+// @Param id path string true "User ID"
+// @Success 200 {boolean} bool
+// @Router /user/{userId} [DELETE]
 func (h *Handler) HandleDeleteUserById(w http.ResponseWriter, r *http.Request) {
  	userId := r.PathValue("userId")
 	if userId == "" {
@@ -92,6 +107,11 @@ func (h *Handler) HandleDeleteUserById(w http.ResponseWriter, r *http.Request) {
 
 }
 
+// @Summary Get all Users
+// @tags User
+// @Produce json
+// @Success 200 {array} types.User
+// @Router /user [GET]
 func (h *Handler) HandleGetUsers(w http.ResponseWriter, r *http.Request) {
 	users, err := h.store.GetUsersWithTransactions()
 	if err != nil {
@@ -102,6 +122,13 @@ func (h *Handler) HandleGetUsers(w http.ResponseWriter, r *http.Request) {
 	utils.WriteJSON(w, http.StatusOK, users)
 }
 
+// @Summary Creates a new User
+// @tags User
+// @Produce json
+// @Accept  json
+// @Param   user  body     types.UpdateUserPayload  true  "User to update"
+// @Success 200 {object} types.User
+// @Router /user [POST]
 func (h *Handler) HandleCreateUser(w http.ResponseWriter, r *http.Request) {
 	var payload types.CreateUserPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {

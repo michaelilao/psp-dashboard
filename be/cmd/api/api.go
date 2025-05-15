@@ -6,6 +6,7 @@ import (
 	"psp-dashboard-be/service/transaction"
 	"psp-dashboard-be/service/user"
 
+	httpSwagger "github.com/swaggo/http-swagger"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
@@ -47,6 +48,8 @@ func (s *APIServer) Run() error {
 		w.Write([]byte("welcome to psp-dashboard go be"))
 	})
 
+
+	router.Handle("/swagger/", httpSwagger.WrapHandler)
 	server := http.Server{
 		Addr: s.addr,
 		Handler: corsWrapper,
