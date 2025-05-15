@@ -89,7 +89,6 @@ func (s *Store) GetUserById(id string) (*types.User, error) {
 
 
 func (s *Store) InsertUser(user types.User) (primitive.ObjectID, error) {
-
 	coll := s.client.Database(dbName).Collection(collName)
 	result, err := coll.InsertOne(context.TODO(), user)
 	if err != nil {

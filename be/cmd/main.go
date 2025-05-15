@@ -23,6 +23,7 @@ import (
 
 func main() {
 
+	// Load .env from file when in dev mode (Non-Docker)
 	if os.Getenv("DOCKER") == "" {
     err := godotenv.Load()
 		if err != nil {
@@ -41,20 +42,20 @@ func main() {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
-	// Connect to MongoDB
+	
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	// Ping the database
+	// ping db
 	if err := client.Ping(ctx, nil); err != nil {
 		log.Fatal("failed to ping mongodb:", err)
 	}
 	log.Println("successfully connected to mongo db")
 
-
+	
 	bePort := os.Getenv("BE_PORT")
 	server := api.NewAPIServer(":"+bePort, client)
 

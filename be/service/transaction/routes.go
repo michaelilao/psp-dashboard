@@ -2,7 +2,6 @@ package transaction
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"psp-dashboard-be/types"
 	"psp-dashboard-be/utils"
@@ -45,30 +44,34 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 // @Router /transaction/{transactionId} [PUT]
 func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Request) {
 		transactionId := r.PathValue("transactionId")
+		// check Transaction Id exists
 		if transactionId == "" {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("provide non empty transactionid"))
 			return
 		}
 
+		// check Transaction Id is valid
 		objectId, err := primitive.ObjectIDFromHex(transactionId)
 		if err != nil {
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid transactionid %v", err))
 			return
 		}
 
+		// parse Payload
 		var payload types.UpdateTransactionPayload
 		if err := utils.ParseJSON(r, &payload); err != nil {
 			utils.WriteError(w, http.StatusBadRequest, err)
 			return
 		}
 
+		// validate Payload
 		if err := utils.Validate.Struct(payload); err != nil {
 			errors := err.(validator.ValidationErrors)
 			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid payload %v", errors))
 			return
 		}
 
-		// Check if transaction exists
+		// check if transaction exists
 		query := bson.D{{Key: "_id", Value: objectId}}
 		transaction, err := h.store.GetTransactionsByQuery(query)
 		if err != nil {
@@ -81,8 +84,8 @@ func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Req
 			return
 		}
 
+		// mofify existing Transaction with payload
 		existingTransaction := transaction[0]
-
 		existingTransaction.Category = payload.Category
 		existingTransaction.TransactionType = payload.TransactionType
 		existingTransaction.Name = payload.Name
@@ -100,10 +103,7 @@ func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Req
 			return
 		}
 
-
-
 		utils.WriteJSON(w, http.StatusOK, existingTransaction)
-		
 }
 
 // @Summary Delete Transaction by Id
@@ -141,24 +141,22 @@ func (h *Handler) HandleDeleteTransactionById(w http.ResponseWriter, r *http.Req
 // @Success 200 {array} types.Transaction
 // @Router /transaction [GET]
 func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) {
-	  // Possible Queries
 
-		// can take as strings
-		query, err := CreateQuery(r.URL.Query())
-		if err != nil {
-				utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid query %v", err))
-				return
-		}
-			
-		log.Println(query)
-		transactions, err := h.store.GetTransactionsByQuery(query)				
-		if err != nil {
-			utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error fetching transactions %v", err))
+	// generate mongdoDB Query from query params
+	query, err := CreateQuery(r.URL.Query())
+	if err != nil {
+			utils.WriteError(w, http.StatusBadRequest, fmt.Errorf("invalid query %v", err))
 			return
-		}
+	}
+		
+	transactions, err := h.store.GetTransactionsByQuery(query)				
+	if err != nil {
+		utils.WriteError(w, http.StatusInternalServerError, fmt.Errorf("error fetching transactions %v", err))
+		return
+	}
 
-	
-		utils.WriteJSON(w, http.StatusOK, transactions)
+
+	utils.WriteJSON(w, http.StatusOK, transactions)
 }
 
 

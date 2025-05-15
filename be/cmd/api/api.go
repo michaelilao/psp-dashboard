@@ -29,7 +29,6 @@ func (s *APIServer) Run() error {
 	userStore := user.NewStore(s.db)
 	transactionStore := transaction.NewStore(s.db)
 
-
 	userHandler := user.NewHandler(userStore)
 	userHandler.RegisterRoutes(router)
 
@@ -37,9 +36,6 @@ func (s *APIServer) Run() error {
 	transactionHandler.RegisterRoutes(router)
 
 	corsWrapper := CORSMiddleware(router)
-
-
-	
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
