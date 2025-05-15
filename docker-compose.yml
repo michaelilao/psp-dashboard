@@ -1,6 +1,18 @@
 version: "3.1"
 
 services:
+  mongo:
+    image: mongo
+    restart: always
+    container_name: mongo
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+    volumes:
+      - ./db_data/:/data/db/
+
   api:
     build:
       context: ./be
@@ -15,9 +27,7 @@ services:
       DB_NAME: ${DB_NAME}
       DOCKER: true
     depends_on:
-      mongo:
-        condition: service_healthy
-        restart: true
+      - mongo
 
   web:
     build:
@@ -26,21 +36,3 @@ services:
         VITE_API: ${VITE_API}
     ports:
       - "3000:3000"
-
-  mongo:
-    image: mongo
-    restart: always
-    container_name: mongo
-    ports:
-      - 27017:27017
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
-      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
-    volumes:
-      - ./db_data/:/data/db/
-    healthcheck:
-      test: echo 'db.runCommand({serverStatus:1}).ok' | mongo admin -u $MONGO_INITDB_ROOT_USERNAME -p $MONGO_INITDB_ROOT_PASSWORD --quiet | grep 1
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
