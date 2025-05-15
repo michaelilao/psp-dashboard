@@ -5,6 +5,7 @@ import { useTransactionsStore } from "../../store/transactions";
 import { TransactionTable } from "../../features/TransactionTable/TransactionTable";
 import { UserTable } from "../../features/UserTable/UserTable";
 import { TransactionPieChart } from "../../features/TransactionChart/PieChart";
+import { TransactionLineGraph } from "../../features/TransactionChart/LineGraph";
 
 function User() {
 	const { getUserById, fetchUsers, users } = useUserStore((state) => state);
@@ -40,14 +41,25 @@ function UserId({ userId }) {
 	return (
 		<div>
 			<h1 className="text-2xl mb-6 font-semibold">{user?.name}</h1>
-			{transactions && transactions.length > 0 ? (
-				<div className="h-82">
-					<TransactionPieChart
-						transactions={transactions}
-						title="Transactions by Category"
-					/>
-				</div>
-			) : null}
+			<div className="flex gap-4">
+				{transactions && transactions.length > 0 ? (
+					<div className="h-82">
+						<TransactionPieChart
+							transactions={transactions}
+							title="Transactions by Category"
+						/>
+					</div>
+				) : null}
+
+				{transactions && transactions.length > 0 ? (
+					<div className="h-82">
+						<TransactionLineGraph
+							transactions={transactions}
+							title="Total Net over Time"
+						/>
+					</div>
+				) : null}
+			</div>
 			<TransactionTable transactions={transactions || []} userId={userId} />
 		</div>
 	);

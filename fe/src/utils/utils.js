@@ -7,16 +7,20 @@ const formatCurrency = (num) => {
   return CAD.format(num)
 }
 
-
-const formatDate = (s) => {
-  const date = new Date(s)
-  const monthNames = [
+const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
 
+const formatDate = (s) => {
+  const date = new Date(s)
   const month = monthNames[date.getUTCMonth()]
   return `${month}, ${date.getUTCDate()} ${date.getUTCFullYear()}`
+}
+
+const formatDateYearMonth = (s) => {
+  const date = new Date(s)
+  return `${date.getUTCFullYear()}-${date.getUTCMonth()}`
 }
 
 const formatErrorMessage = (s) => {
@@ -42,4 +46,4 @@ function capitalize(val) {
 }
 
 
-export {formatCurrency, formatErrorMessage, formatDate, capitalize}
+export {formatCurrency, formatErrorMessage, formatDate, capitalize, formatDateYearMonth}
