@@ -53,3 +53,13 @@ To run all services in a production/testing environment
 ```bash
 docker compose up --build
 ```
+
+## Backend Endpoints
+
+The backend API is documented using swagger and can be accessed at
+
+```
+http://localhost:8080/swagger/index.html
+```
+
+After modifying the swagger docs run `swag init -g cmd/main.go` to update the docs
