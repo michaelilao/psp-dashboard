@@ -1,6 +1,28 @@
 version: "3.1"
 
 services:
+  api:
+    build:
+      context: ./be
+    ports:
+      - ${BE_PORT}:${BE_PORT}
+    environment:
+      BE_PORT: ${BE_PORT}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: mongo
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DOCKER: true
+
+  web:
+    build:
+      context: ./fe
+      args:
+        VITE_API: ${VITE_API}
+    ports:
+      - "3000:3000"
+
   mongo:
     image: mongo
     restart: always

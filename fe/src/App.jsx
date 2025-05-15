@@ -2,8 +2,10 @@ import { SideBar } from "./components/SideBar/SideBar";
 import { Routes, Route } from "react-router";
 import { Home } from "./pages/Home/Home";
 import { User } from "./pages/User/User";
+import { api } from "./api/api";
 
 function App() {
+	console.log(api);
 	return (
 		<div className="md:flex h-dvh">
 			<div className="h-16 md:h-full w-full md:w-1/10">
