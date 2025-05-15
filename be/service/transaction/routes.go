@@ -35,6 +35,14 @@ func (h *Handler) RegisterRoutes(router *http.ServeMux) {
 }
 
 
+// @Summary Updates Transaction by Id
+// @tags Transaction
+// @Produce json
+// @Accept  json
+// @Param   transaction  body     types.UpdateTransactionPayload  true  "Transaction to update"
+// @Param id path string true "Transaction ID"
+// @Success 200 {object} types.Transaction
+// @Router /transaction/{transactionId} [PUT]
 func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Request) {
 		transactionId := r.PathValue("transactionId")
 		if transactionId == "" {
@@ -98,7 +106,11 @@ func (h *Handler) HandleUpdateTransactionById(w http.ResponseWriter, r *http.Req
 		
 }
 
-
+// @Summary Delete Transaction by Id
+// @tags Transaction
+// @Param id path string true "Transaction ID"
+// @Success 200 {boolean} bool
+// @Router /transaction/{transactionId} [DELETE]
 func (h *Handler) HandleDeleteTransactionById(w http.ResponseWriter, r *http.Request) {
 		transactionId := r.PathValue("transactionId")
 		if transactionId == "" {
@@ -122,6 +134,12 @@ func (h *Handler) HandleDeleteTransactionById(w http.ResponseWriter, r *http.Req
 
 }
 
+// @Summary Gets Transactions by Query
+// @tags Transaction
+// @Produce json
+// @Param   userId     query    string      false "Filter transactions by userId"
+// @Success 200 {array} types.Transaction
+// @Router /transaction [GET]
 func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) {
 	  // Possible Queries
 
@@ -143,6 +161,14 @@ func (h *Handler) HandleGetTransactions(w http.ResponseWriter, r *http.Request) 
 		utils.WriteJSON(w, http.StatusOK, transactions)
 }
 
+
+// @Summary Create Transaction 
+// @tags Transaction
+// @Produce json
+// @Accept  json
+// @Param   transaction  body     types.CreateTransactionPayload  true  "Transaction to Create"
+// @Success 200 {object} types.Transaction
+// @Router /transaction [POST]
 func (h *Handler) HandleCreateTransaction(w http.ResponseWriter, r *http.Request) {
 	var payload types.CreateTransactionPayload
 	if err := utils.ParseJSON(r, &payload); err != nil {

@@ -1,5 +1,30 @@
 basePath: /
 definitions:
+  types.CreateTransactionPayload:
+    properties:
+      TransactionType:
+        enum:
+        - income
+        - expense
+        type: string
+      amount:
+        type: integer
+      category:
+        type: string
+      date:
+        type: string
+      name:
+        type: string
+      notes:
+        type: string
+      userId:
+        type: string
+    required:
+    - TransactionType
+    - amount
+    - category
+    - userId
+    type: object
   types.Transaction:
     properties:
       amount:
@@ -18,6 +43,27 @@ definitions:
         type: string
       userId:
         type: string
+    type: object
+  types.UpdateTransactionPayload:
+    properties:
+      TransactionType:
+        enum:
+        - income
+        - expense
+        type: string
+      amount:
+        type: integer
+      category:
+        type: string
+      date:
+        type: string
+      name:
+        type: string
+      notes:
+        type: string
+    required:
+    - TransactionType
+    - amount
     type: object
   types.UpdateUserPayload:
     properties:
@@ -53,6 +99,86 @@ info:
   title: PSP Backend API
   version: "1.0"
 paths:
+  /transaction:
+    get:
+      parameters:
+      - description: Filter transactions by userId
+        in: query
+        name: userId
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/types.Transaction'
+            type: array
+      summary: Gets Transactions by Query
+      tags:
+      - Transaction
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Transaction to Create
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateTransactionPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Transaction'
+      summary: Create Transaction
+      tags:
+      - Transaction
+  /transaction/{transactionId}:
+    delete:
+      parameters:
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: boolean
+      summary: Delete Transaction by Id
+      tags:
+      - Transaction
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Transaction to update
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/types.UpdateTransactionPayload'
+      - description: Transaction ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/types.Transaction'
+      summary: Updates Transaction by Id
+      tags:
+      - Transaction
   /user:
     get:
       produces:

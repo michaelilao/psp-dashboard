@@ -15,6 +15,130 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/transaction": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Gets Transactions by Query",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Filter transactions by userId",
+                        "name": "userId",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/types.Transaction"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Create Transaction",
+                "parameters": [
+                    {
+                        "description": "Transaction to Create",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.CreateTransactionPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Transaction"
+                        }
+                    }
+                }
+            }
+        },
+        "/transaction/{transactionId}": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Updates Transaction by Id",
+                "parameters": [
+                    {
+                        "description": "Transaction to update",
+                        "name": "transaction",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/types.UpdateTransactionPayload"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/types.Transaction"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Transaction"
+                ],
+                "summary": "Delete Transaction by Id",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Transaction ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
         "/user": {
             "get": {
                 "produces": [
@@ -136,6 +260,42 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "types.CreateTransactionPayload": {
+            "type": "object",
+            "required": [
+                "TransactionType",
+                "amount",
+                "category",
+                "userId"
+            ],
+            "properties": {
+                "TransactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notes": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string"
+                }
+            }
+        },
         "types.Transaction": {
             "type": "object",
             "properties": {
@@ -161,6 +321,37 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "userId": {
+                    "type": "string"
+                }
+            }
+        },
+        "types.UpdateTransactionPayload": {
+            "type": "object",
+            "required": [
+                "TransactionType",
+                "amount"
+            ],
+            "properties": {
+                "TransactionType": {
+                    "type": "string",
+                    "enum": [
+                        "income",
+                        "expense"
+                    ]
+                },
+                "amount": {
+                    "type": "integer"
+                },
+                "category": {
+                    "type": "string"
+                },
+                "date": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "notes": {
                     "type": "string"
                 }
             }
