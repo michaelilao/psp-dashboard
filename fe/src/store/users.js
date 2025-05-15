@@ -5,7 +5,7 @@ const useUserStore = create((set, get) => ({
   users: [],
   fetchUsers: async () => {
     const res = await fetchAllUsers();
-		const u = res.data;
+		const u = res.data || [];
 		const formattedUsers = u.map((u) => {
 			const newU = { ...u };
 			const transactions = u.transaction;

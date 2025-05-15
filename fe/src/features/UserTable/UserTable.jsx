@@ -23,7 +23,7 @@ const COLS = [
 	},
 	{
 		id: "total",
-		label: "Total",
+		label: "Net",
 		getFormat: (num) => formatCurrency(num),
 
 		getTextColor: (num) => {

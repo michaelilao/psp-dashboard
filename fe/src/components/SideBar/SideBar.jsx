@@ -7,7 +7,7 @@ import { NavLink } from "react-router";
 
 function SideBar() {
 	return (
-		<div className="bg-slate-200 h-full flex flex-col pt-12 gap-4">
+		<div className="bg-slate-200 h-full flex md:flex-col md:pt-12 gap-4 justify-center md:justify-start">
 			<SideBarButton Icon={Squares2X2Icon} path="/" />
 			<SideBarButton Icon={CreditCardIcon} path="users" />
 		</div>
@@ -23,7 +23,7 @@ function SideBarButton({ Icon, path }) {
 					<div
 						className={
 							isActive
-								? `border-r-4 border-blue-500`
+								? `border-b-4 md:border-r-4 md:border-b-0 border-blue-500`
 								: "border-r-4 border-transparent"
 						}
 					>
