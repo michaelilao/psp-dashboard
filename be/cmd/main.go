@@ -39,23 +39,39 @@ func main() {
 	dbPort := os.Getenv("DB_PORT")
 
 	uri := fmt.Sprintf("mongodb://%s:%s@%s:%s", user, pass, host, dbPort)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
 	defer cancel()
 
 	
 	clientOptions := options.Client().ApplyURI(uri)
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("could not connect" , err)
 	}
 
 	// ping db
-	if err := client.Ping(ctx, nil); err != nil {
-		log.Fatal("failed to ping mongodb:", err)
+	pingCtx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)	
+	defer cancel()
+
+	retryInterval := 2 * time.Second
+	for {
+		attemptCtx, attemptCancel := context.WithTimeout(pingCtx, retryInterval)
+		err := client.Ping(attemptCtx, nil)
+		attemptCancel() // clean up context
+
+		if err == nil {
+			log.Println("successfully connected to mongo db")
+			break
+		}
+
+		select {
+			case <-pingCtx.Done():
+				log.Fatal("timed out waiting for MongoDB to respond to ping:", err)
+			case <-time.After(retryInterval):
+				log.Println("MongoDB ping failed, retrying...", err)
+			}
 	}
 	log.Println("successfully connected to mongo db")
-
-	
 	bePort := os.Getenv("BE_PORT")
 	server := api.NewAPIServer(":"+bePort, client)
 
